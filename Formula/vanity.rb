@@ -5,23 +5,23 @@
 class Vanity < Formula
   desc "Sync your GitHub contribution graph across multiple accounts"
   homepage "https://github.com/wdm0006/vanity"
-  version "0.3.0"
+  version "0.4.0"
   license "MIT"
 
   depends_on "gh"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.3.0/vanity_0.3.0_darwin_amd64.tar.gz"
-      sha256 "141c9ea5c2b39382079fadba0a457df67306cecd298c2b15e78370bf5172532e"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_darwin_amd64.tar.gz"
+      sha256 "3de46704edfeedc8927f4c22760d8f2159488cb6a0f73159147dedfa266bf4d7"
 
       def install
         bin.install "vanity"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.3.0/vanity_0.3.0_darwin_arm64.tar.gz"
-      sha256 "f107a1197e2154c899bd9346103081e26c42dae0e02e60b86b94edaca8e3a5ac"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_darwin_arm64.tar.gz"
+      sha256 "9515146ce59f7206be0d1252a60b1983b158745e57e6b27c0d8f1f8fae650df5"
 
       def install
         bin.install "vanity"
@@ -31,15 +31,15 @@ class Vanity < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.3.0/vanity_0.3.0_linux_amd64.tar.gz"
-      sha256 "4d982e5abd15f53bddae38011811704adb3a433c4835bbd6492b5bd4b244121b"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_linux_amd64.tar.gz"
+      sha256 "69b736680102f8b63e8118f6eb57126cdbc7ae4be1345cc2ac638ab9f8a3d82c"
       def install
         bin.install "vanity"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.3.0/vanity_0.3.0_linux_arm64.tar.gz"
-      sha256 "89ea00cc824884676805e5a0e0314a29a2dcf788d6ffd0a0dd25ffa846ca3fa8"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_linux_arm64.tar.gz"
+      sha256 "222ff2b56c0fc16aab4f8f7c58719cd5f3d6f49d4b664e14f0b5c56be96411fa"
       def install
         bin.install "vanity"
       end
