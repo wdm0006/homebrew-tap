@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  brew-checks:
+    name: brew style & audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Check out tap
+        uses: actions/checkout@v4
+
+      - name: Install tap into Homebrew
+        run: |
+          tap_dir="$(brew --repository)/Library/Taps/wdm0006/homebrew-tap"
+          rm -rf "$tap_dir"
+          mkdir -p "$(dirname "$tap_dir")"
+          cp -R "$GITHUB_WORKSPACE" "$tap_dir"
+
+      - name: brew style
+        run: brew style wdm0006/tap
+
+      # Offline audit only: no --online/--strict so the job needs no network
+      # fetches or full builds and stays fast and reliable.
+      - name: brew audit
+        run: brew audit --tap wdm0006/tap
