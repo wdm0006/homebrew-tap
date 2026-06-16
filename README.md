@@ -13,6 +13,8 @@ brew tap wdm0006/tap
 | Formula | Description |
 |---------|-------------|
 | [vanity](https://github.com/wdm0006/vanity) | Sync your GitHub contribution graph across multiple accounts |
+| [stargazers](https://github.com/wdm0006/stargazers) | CLI tool to fetch, analyze, and summarize GitHub stargazers and forkers |
+| [rampart](https://github.com/wdm0006/rampart) | Audit and enforce GitHub branch protection rules across repos |
 
 ## Usage
 
