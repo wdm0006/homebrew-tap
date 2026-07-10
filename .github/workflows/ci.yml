@@ -12,18 +12,16 @@ jobs:
     name: brew style & audit
     runs-on: ubuntu-latest
     steps:
+      # setup-homebrew detects that this repo is a tap and symlinks it into
+      # Homebrew's Taps directory as wdm0006/tap (pointing at the checked-out
+      # workspace), so `brew style`/`brew audit` can target it directly. Do NOT
+      # replace that symlink with a real copy: setup-homebrew's post-job cleanup
+      # runs `rm` on the symlink and fails ("Is a directory") if it's a dir.
       - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@main
 
       - name: Check out tap
         uses: actions/checkout@v4
-
-      - name: Install tap into Homebrew
-        run: |
-          tap_dir="$(brew --repository)/Library/Taps/wdm0006/homebrew-tap"
-          rm -rf "$tap_dir"
-          mkdir -p "$(dirname "$tap_dir")"
-          cp -R "$GITHUB_WORKSPACE" "$tap_dir"
 
       - name: brew style
         run: brew style wdm0006/tap
