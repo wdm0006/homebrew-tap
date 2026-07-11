@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  brew-checks:
+    name: brew style & audit
+    runs-on: ubuntu-latest
+    steps:
+      # setup-homebrew detects that this repo is a tap and symlinks it into
+      # Homebrew's Taps directory as wdm0006/tap (pointing at the checked-out
+      # workspace), so `brew style`/`brew audit` can target it directly. Do NOT
+      # replace that symlink with a real copy: setup-homebrew's post-job cleanup
+      # runs `rm` on the symlink and fails ("Is a directory") if it's a dir.
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@main
+
+      - name: Check out tap
+        uses: actions/checkout@v4
+
+      - name: brew style
+        run: brew style wdm0006/tap
+
+      # Offline audit only: no --online/--strict so the job needs no network
+      # fetches or full builds and stays fast and reliable.
+      - name: brew audit
+        run: brew audit --tap wdm0006/tap
