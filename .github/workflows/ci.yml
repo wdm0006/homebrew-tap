@@ -18,10 +18,10 @@ jobs:
       # replace that symlink with a real copy: setup-homebrew's post-job cleanup
       # runs `rm` on the symlink and fails ("Is a directory") if it's a dir.
       - name: Set up Homebrew
-        uses: Homebrew/actions/setup-homebrew@main
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
 
       - name: Check out tap
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: brew style
         run: brew style wdm0006/tap
