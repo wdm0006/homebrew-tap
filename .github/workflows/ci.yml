@@ -30,3 +30,23 @@ jobs:
       # fetches or full builds and stays fast and reliable.
       - name: brew audit
         run: brew audit --tap wdm0006/tap
+
+  formula-smoke-test:
+    name: brew install & test (${{ matrix.formula }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        formula: [vanity, rampart, stargazers]
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/${{ matrix.formula }}
+
+      - name: Test formula
+        run: brew test wdm0006/tap/${{ matrix.formula }}
