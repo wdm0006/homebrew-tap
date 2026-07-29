@@ -35,7 +35,7 @@ jobs:
         run: brew audit --tap wdm0006/tap
 
       - name: brew audit online
-        if: github.event_name == 'schedule'
+        if: ${{ !cancelled() && github.event_name == 'schedule' }}
         run: brew audit --tap wdm0006/tap --online
 
   formula-changes:
