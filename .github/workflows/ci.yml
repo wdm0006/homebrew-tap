@@ -3,6 +3,9 @@ name: CI
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "17 7 * * 1"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -31,13 +34,46 @@ jobs:
       - name: brew audit
         run: brew audit --tap wdm0006/tap
 
-  formula-smoke-test:
-    name: brew install & test (${{ matrix.formula }}, ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        formula: [vanity, rampart, stargazers]
+      - name: brew audit online
+        if: ${{ !cancelled() && github.event_name == 'schedule' }}
+        run: brew audit --tap wdm0006/tap --online
+
+  formula-changes:
+    name: Detect changed formulae
+    runs-on: ubuntu-latest
+    outputs:
+      formulae: ${{ steps.changes.outputs.formulae }}
+    steps:
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed formulae
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "schedule" || "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            formulae='["vanity","rampart","stargazers"]'
+          elif [[ "$BASE_SHA" =~ ^0+$ ]]; then
+            formulae="$(git ls-tree -r --name-only "$HEAD_SHA" Formula |
+              sed -n 's#^Formula/\(.*\)\.rb$#\1#p' |
+              jq -Rsc 'split("\n") | map(select(length > 0))')"
+          else
+            formulae="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA" -- Formula |
+              sed -n 's#^Formula/\(.*\)\.rb$#\1#p' |
+              jq -Rsc 'split("\n") | map(select(length > 0))')"
+          fi
+          echo "formulae=$formulae" >> "$GITHUB_OUTPUT"
+
+  vanity-smoke-test-ubuntu:
+    name: brew install & test (vanity, ubuntu-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'vanity')
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Homebrew
         uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
@@ -46,7 +82,97 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
       - name: Install formula
-        run: brew install wdm0006/tap/${{ matrix.formula }}
+        run: brew install wdm0006/tap/vanity
 
       - name: Test formula
-        run: brew test wdm0006/tap/${{ matrix.formula }}
+        run: brew test wdm0006/tap/vanity
+
+  vanity-smoke-test-macos:
+    name: brew install & test (vanity, macos-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'vanity')
+    runs-on: macos-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/vanity
+
+      - name: Test formula
+        run: brew test wdm0006/tap/vanity
+
+  rampart-smoke-test-ubuntu:
+    name: brew install & test (rampart, ubuntu-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'rampart')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/rampart
+
+      - name: Test formula
+        run: brew test wdm0006/tap/rampart
+
+  rampart-smoke-test-macos:
+    name: brew install & test (rampart, macos-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'rampart')
+    runs-on: macos-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/rampart
+
+      - name: Test formula
+        run: brew test wdm0006/tap/rampart
+
+  stargazers-smoke-test-ubuntu:
+    name: brew install & test (stargazers, ubuntu-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'stargazers')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/stargazers
+
+      - name: Test formula
+        run: brew test wdm0006/tap/stargazers
+
+  stargazers-smoke-test-macos:
+    name: brew install & test (stargazers, macos-latest)
+    needs: formula-changes
+    if: contains(fromJSON(needs.formula-changes.outputs.formulae), 'stargazers')
+    runs-on: macos-latest
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install formula
+        run: brew install wdm0006/tap/stargazers
+
+      - name: Test formula
+        run: brew test wdm0006/tap/stargazers

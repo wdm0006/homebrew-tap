@@ -5,7 +5,6 @@
 class Vanity < Formula
   desc "Sync your GitHub contribution graph across multiple accounts"
   homepage "https://github.com/wdm0006/vanity"
-  version "0.4.0"
   license "MIT"
 
   depends_on "gh"
