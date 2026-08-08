@@ -10,7 +10,7 @@ class Stargazers < Formula
   sha256 "fa090d3759f70a113ba3ea31d9e42697e1332bdc5c26f18d32417345c4544c60"
   license "MIT"
 
-  depends_on "python@3.12"
+  depends_on "python@3.13"
 
   resource "certifi" do
     url "https://files.pythonhosted.org/packages/1c/ab/c9f1e32b7b1bf505bf26f0ef697775960db7932abeb7b516de930ba2705f/certifi-2025.1.31.tar.gz"
