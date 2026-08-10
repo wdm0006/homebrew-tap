@@ -1,7 +1,11 @@
 name: CI
 
 on:
+  # Branch commits are covered once via pull_request; scoping push to the
+  # default branch avoids running the whole install matrix twice per commit
+  # while keeping GoReleaser's direct pushes to main covered.
   push:
+    branches: [main]
   pull_request:
   schedule:
     - cron: "17 7 * * 1"
@@ -9,6 +13,13 @@ on:
 
 permissions:
   contents: read
+
+# A new commit on a branch cancels its own in-flight run. main is never
+# cancelled mid-flight (schedule/dispatch runs also report refs/heads/main),
+# so a published formula update always finishes validating.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   brew-checks:
