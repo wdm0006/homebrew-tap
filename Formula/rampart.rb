@@ -5,7 +5,6 @@
 class Rampart < Formula
   desc "Audit and enforce GitHub branch protection rules across repos"
   homepage "https://github.com/wdm0006/rampart"
-  version "0.8.0"
   license "MIT"
 
   depends_on "gh"

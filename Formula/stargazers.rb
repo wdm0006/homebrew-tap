@@ -13,7 +13,7 @@ class Stargazers < Formula
 
   def install
     ENV["UV_CACHE_DIR"] = buildpath/"uv-cache"
-    system "uv", "venv", "--python", Formula["python@3.13"].opt_bin/"python3.13", libexec
+    system "uv", "venv", "--python", formula_opt_bin("python@3.13")/"python3.13", libexec
     system "uv", "pip", "install", "--python", libexec/"bin/python", buildpath
     bin.install_symlink libexec/"bin/stargazers"
   end
