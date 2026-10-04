@@ -20,5 +20,16 @@ class Stargazers < Formula
 
   test do
     system bin/"stargazers", "--help"
+
+    (testpath/"acct_account_stars_by_day.csv").write <<~CSV
+      star_date,total_new_stars_on_day,total_cumulative_stars_up_to_day
+      2024-01-01,2,2
+      2024-01-02,3,5
+      2024-01-03,1,6
+    CSV
+
+    system bin/"stargazers", "plot",
+           "--file", testpath/"acct_account_stars_by_day.csv",
+           "--type", "account-trend"
   end
 end
