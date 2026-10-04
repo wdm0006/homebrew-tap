@@ -49,6 +49,29 @@ jobs:
         if: ${{ !cancelled() && github.event_name == 'schedule' }}
         run: brew audit --tap wdm0006/tap --online
 
+  livecheck:
+    name: brew livecheck (formula currency)
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      # Same tap-symlink setup as brew-checks; do not replace the symlink.
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@18fcb8e3e06b4247c676c506750dc95ea7226479 # 2026.07.13.1
+
+      - name: Check out tap
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: brew livecheck (all formulae)
+        run: brew livecheck --tap wdm0006/tap --json | jq .
+
+      - name: Fail on formulae behind upstream
+        run: |
+          stale="$(brew livecheck --tap wdm0006/tap --newer-only --json)"
+          if [[ "$(jq 'length' <<<"$stale")" != "0" ]]; then
+            jq -r '.[] | "::error::\(.formula) is behind upstream: current \(.version.current), latest \(.version.latest)"' <<<"$stale"
+            exit 1
+          fi
+
   formula-changes:
     name: Detect changed formulae
     runs-on: ubuntu-latest
