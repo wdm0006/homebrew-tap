@@ -4,8 +4,8 @@
 class Stargazers < Formula
   desc "CLI tool to fetch, analyze, and summarize GitHub stargazers and forkers"
   homepage "https://github.com/wdm0006/stargazers"
-  url "https://github.com/wdm0006/stargazers/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "fa090d3759f70a113ba3ea31d9e42697e1332bdc5c26f18d32417345c4544c60"
+  url "https://github.com/wdm0006/stargazers/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "4ef7db2e8895a5ba89f2ba419fd466352e06dcabf118c423f843c619fe85a091"
   license "MIT"
 
   depends_on "python@3.13"
