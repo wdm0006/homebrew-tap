@@ -124,9 +124,10 @@ jobs:
           fi
 
           echo "Comparing $merge_base..$HEAD_SHA"
-          formulae="$(git diff --name-only "$merge_base" "$HEAD_SHA" -- Formula |
-            sed -n 's#^Formula/\(.*\)\.rb$#\1#p' |
-            jq -Rsc 'split("\n") | map(select(length > 0))')"
+          formulae="$(git diff --name-only "$merge_base" "$HEAD_SHA" -- Formula .github/workflows/ci.yml |
+            sed -n -e 's#^Formula/\(.*\)\.rb$#\1#p' \
+              -e '/^\.github\/workflows\/ci\.yml$/ { s/.*/vanity\nrampart/; p; }' |
+            jq -Rsc 'split("\n") | map(select(length > 0)) | reduce .[] as $formula ([]; if index($formula) then . else . + [$formula] end)')"
           echo "formulae=$formulae" >> "$GITHUB_OUTPUT"
 
   vanity-smoke-test-ubuntu:
