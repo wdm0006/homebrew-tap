@@ -5,22 +5,23 @@
 class Rampart < Formula
   desc "Audit and enforce GitHub branch protection rules across repos"
   homepage "https://github.com/wdm0006/rampart"
+  version "0.9.0"
   license "MIT"
 
   depends_on "gh"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/wdm0006/rampart/releases/download/v0.8.1/rampart_0.8.1_darwin_amd64.tar.gz"
-      sha256 "a5f18bae07fc52de77ac677f998e3cbef79b2b4b3c61f83490da02e9e57bd15c"
+      url "https://github.com/wdm0006/rampart/releases/download/v0.9.0/rampart_0.9.0_darwin_amd64.tar.gz"
+      sha256 "cfc7225635751fa9abaeb6dfcf8cfbad05051d648552d044d82a3b727c3d1681"
 
       define_method(:install) do
         bin.install "rampart"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/wdm0006/rampart/releases/download/v0.8.1/rampart_0.8.1_darwin_arm64.tar.gz"
-      sha256 "9e38ce97c5d359ac6613896ece5cd0e715b9728331a1d56188bbff6ce8508f58"
+      url "https://github.com/wdm0006/rampart/releases/download/v0.9.0/rampart_0.9.0_darwin_arm64.tar.gz"
+      sha256 "8af086861bcbd6477ded6948cbd93efed6a24cd07294a55be222c11dfea6f2e3"
 
       define_method(:install) do
         bin.install "rampart"
@@ -30,15 +31,15 @@ class Rampart < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/rampart/releases/download/v0.8.1/rampart_0.8.1_linux_amd64.tar.gz"
-      sha256 "94e7fa17510f88d370f3ee1c6533168a27be8a18db5193b5af6ab0cfa5df5bd9"
+      url "https://github.com/wdm0006/rampart/releases/download/v0.9.0/rampart_0.9.0_linux_amd64.tar.gz"
+      sha256 "665d20d201d526682033847410912c854510945b33fc45109ad87ea9c20b72d2"
       define_method(:install) do
         bin.install "rampart"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/rampart/releases/download/v0.8.1/rampart_0.8.1_linux_arm64.tar.gz"
-      sha256 "3249c0b26e421fbb75939dee4e7a13ea81b41458989091f6567bd8751e5d8c82"
+      url "https://github.com/wdm0006/rampart/releases/download/v0.9.0/rampart_0.9.0_linux_arm64.tar.gz"
+      sha256 "0f2a1f0f6a2cd15a457f800aaeabb09598f5bab3ba5403dae193347bd20f8cc2"
       define_method(:install) do
         bin.install "rampart"
       end
