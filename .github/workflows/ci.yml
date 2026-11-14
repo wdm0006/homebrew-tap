@@ -45,6 +45,44 @@ jobs:
       - name: brew audit
         run: brew audit --tap wdm0006/tap
 
+      - name: README formula table matches Formula/
+        run: |
+          python3 - <<'PY'
+          import pathlib, re, sys
+
+          formulae = {}
+          for f in sorted(pathlib.Path("Formula").glob("*.rb")):
+              m = re.search(r'^\s*desc\s+"([^"]*)"', f.read_text(), re.M)
+              if not m:
+                  sys.exit(f"Formula/{f.name}: no desc string found")
+              formulae[f.stem] = m.group(1)
+          if not formulae:
+              sys.exit("no formulae found in Formula/; the scan is broken")
+
+          readme = pathlib.Path("README.md").read_text()
+          section = re.search(r"^## Available Formulae\s*$(.*?)(?=^## |\Z)", readme, re.M | re.S)
+          if not section:
+              sys.exit('README.md: no "## Available Formulae" section')
+          rows = {}
+          for m in re.finditer(r"^\|\s*\[([^\]]+)\]\([^)]*\)\s*\|\s*(.*?)\s*\|\s*$", section.group(1), re.M):
+              rows[m.group(1)] = m.group(2)
+          if not rows:
+              sys.exit("README.md: no formula rows found in the table; the scan is broken")
+
+          errors = []
+          for name, desc in formulae.items():
+              if name not in rows:
+                  errors.append(f"{name}: no README row (expected desc: {desc!r})")
+              elif rows[name] != desc:
+                  errors.append(f"{name}: README desc differs\n  expected (Formula/{name}.rb): {desc!r}\n  README says:  {rows[name]!r}")
+          for name in rows:
+              if name not in formulae:
+                  errors.append(f"{name}: README row has no Formula/{name}.rb")
+          if errors:
+              sys.exit("README.md formula table is out of sync with Formula/:\n" + "\n".join(errors))
+          print(f"README table matches {len(formulae)} formulae: {', '.join(formulae)}")
+          PY
+
       - name: brew audit online
         if: ${{ !cancelled() && github.event_name == 'schedule' }}
         run: brew audit --tap wdm0006/tap --online
