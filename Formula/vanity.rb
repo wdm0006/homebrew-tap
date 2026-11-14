@@ -11,23 +11,23 @@ class Vanity < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_darwin_amd64.tar.gz"
-      sha256 "3de46704edfeedc8927f4c22760d8f2159488cb6a0f73159147dedfa266bf4d7"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.1/vanity_0.4.1_darwin_amd64.tar.gz"
+      sha256 "85f9b62edc02f6809b81b8acdbda193daafb7d7d361f78fa9a60881bc1cbc40b"
     end
     if Hardware::CPU.arm?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_darwin_arm64.tar.gz"
-      sha256 "9515146ce59f7206be0d1252a60b1983b158745e57e6b27c0d8f1f8fae650df5"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.1/vanity_0.4.1_darwin_arm64.tar.gz"
+      sha256 "4bb68e251189d0b004a5e0a49a50e8175ca8fd0409d3d9cd522507329d7891bc"
     end
   end
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_linux_amd64.tar.gz"
-      sha256 "69b736680102f8b63e8118f6eb57126cdbc7ae4be1345cc2ac638ab9f8a3d82c"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.1/vanity_0.4.1_linux_amd64.tar.gz"
+      sha256 "7a744f6d865deeb98de9f1cbc4ec0c1bf41fd342ec6287ee420b71ca6a7ff3ab"
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/wdm0006/vanity/releases/download/v0.4.0/vanity_0.4.0_linux_arm64.tar.gz"
-      sha256 "222ff2b56c0fc16aab4f8f7c58719cd5f3d6f49d4b664e14f0b5c56be96411fa"
+      url "https://github.com/wdm0006/vanity/releases/download/v0.4.1/vanity_0.4.1_linux_arm64.tar.gz"
+      sha256 "c54ba27a82ddec2d2cd374301d3e1549e13fb27e6d41ec7a90ce4aa9852e9bf5"
     end
   end
 
